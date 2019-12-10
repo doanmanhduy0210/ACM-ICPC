@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1570466522 source:d:\acm icpc 2019-2020\contest\main.cpp
+	<bits/stdc++.h>
+	<tuple>
+

@@ -1,0 +1,177 @@
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+template <class type>
+class STACK
+{
+public: type *a;
+public: int top,n;
+		STACK(){
+			a=new type[100];
+			top=-1;
+			n=100;};
+			~STACK(){};
+			void push(type value){
+				top++;
+				a[top]=value;
+			}
+			type pop()
+			{
+				type kq=a[top]; 
+				top--; 
+				return kq;
+			}
+			bool isFull()
+			{
+				if(top==99)
+					return true;
+				return false;
+			}
+			bool isEmpty()
+			{
+				if(top==-1)
+					return true;
+				return false;
+			}
+			type isTop()
+			{
+				return a[top];
+			}
+			void tangmang(){n+=100; type *b=a; a=new type[n]; a=b; }
+};
+int isNumber(char x)
+{
+	switch(x){
+	case '1': return 1; break;
+	case '2': return 2;break;
+	case '3': return 3;break;
+	case '4': return 4;break;
+	case '5': return 5;break;
+	case '6': return 6;break;
+	case '7': return 7;break;
+	case '8': return 8;break;
+	case '9': return 9;break;
+	case '0': return 0;break;
+	}
+	return -1;
+}
+bool isOperator(char x)
+{
+	if(x=='+'||x=='-'||x=='*'||x=='/'||x=='^')
+		return true;
+	return false;
+}
+bool isBracket(char x)
+{
+	if(x=='('||x==')')
+		return true;
+	return false;
+}
+int compareOperator(char x)
+{
+	if(x=='*'||x=='/')
+		return 2;
+	else if(x=='^')
+		return 3;
+	return 1;
+}
+int getLength(char *x)
+{
+	int length=0;
+	while(x[length]!='\0')
+		length++;
+	return length;
+}
+char* chuyendoihauto(char* Expression,int n,int &index)
+{
+	STACK <char> st;
+	char *answer;
+	answer = new char[1000];
+	int indexa=0;
+	for(int i=0;i<n;i++)
+	{
+		char character=Expression[i];
+		if(isOperator(character))
+		{
+			if(!st.isEmpty() && isOperator(st.isTop()))
+			{
+				if(compareOperator(st.isTop())>=compareOperator(character))
+				{
+					answer[indexa++]=st.pop();
+				}
+				st.push(character);
+			}
+			else
+			{
+				st.push(character);
+			}
+		}else if(isBracket(character))
+		{
+			if(character=='(')
+				st.push(character);
+			else
+			{
+				while(st.isTop()!='(')
+				{answer[indexa++]=st.pop();}
+				st.pop();
+			}
+		}else
+		{
+			answer[indexa++]=character;
+		}
+	}
+	while(!st.isEmpty())
+		answer[indexa++]=st.pop();
+	answer[indexa]='\0';
+	index=indexa;
+	return answer;
+}
+ 
+int Caculator(char* Expression,int index)
+{
+	STACK <int> st;
+	for(int i=0;i<index;i++)
+	{
+		char character=Expression[i];
+		if(isOperator(character))
+		{
+			int a=st.pop();
+			int b=st.pop();
+			if(character=='+')
+			{
+				st.push(a+b);
+			}else if(character=='-')
+			{
+				st.push(a-b);
+			}else if(character=='*')
+			{
+				st.push(a*b);
+			}else if(character=='/')
+			{
+				st.push(a/b);}
+		} else {
+			st.push(isNumber(character));
+		}
+	}
+	return st.isTop();
+}
+int main()
+{
+//	freopen("input.txt","r",stdin);
+	int testcase;
+	cin>>testcase;
+	for(int t=1;t<=testcase;t++)
+	{
+	char * Expression;
+	Expression=(char*)malloc(sizeof(char)*1000);
+	int n;
+	//cin>>n;
+	
+	cin>>Expression;
+	n=getLength(Expression);
+	int index; // so ki tu sau khi bo ngoac
+	char *hauto = chuyendoihauto(Expression,n,index);
+	cout<<hauto<<endl;
+	}
+	return 0;
+} 
